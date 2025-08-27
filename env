@@ -1,0 +1,9 @@
+# Database configuration
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=yvart
+DB_PASS=1234
+DB_NAME=techmed
+
+# App configuration
+PORT=3000
