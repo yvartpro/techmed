@@ -9,6 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DatabaseModule = void 0;
 const common_1 = require("@nestjs/common");
 const sequelize_1 = require("@nestjs/sequelize");
+const config_1 = require("@nestjs/config");
 const user_model_1 = require("../users/user.model");
 const equipment_model_1 = require("../equipments/equipment.model");
 const activity_model_1 = require("../activities/activity.model");
@@ -18,17 +19,20 @@ exports.DatabaseModule = DatabaseModule;
 exports.DatabaseModule = DatabaseModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            sequelize_1.SequelizeModule.forRoot({
-                dialect: 'mysql',
-                host: 'localhost',
-                port: 3306,
-                username: 'yvart',
-                password: '1234',
-                database: 'techmed',
-                models: [user_model_1.User, equipment_model_1.Equipment, activity_model_1.Activity],
-                autoLoadModels: true,
-                synchronize: true,
-                logging: false,
+            sequelize_1.SequelizeModule.forRootAsync({
+                imports: [config_1.ConfigModule],
+                inject: [config_1.ConfigService],
+                useFactory: (configService) => ({
+                    dialect: 'mysql',
+                    host: configService.get('DB_HOST'),
+                    port: Number(configService.get('DB_PORT')),
+                    username: configService.get('DB_USER'),
+                    password: configService.get('DB_PASS'),
+                    database: configService.get('DB_NAME'),
+                    models: [user_model_1.User, equipment_model_1.Equipment, activity_model_1.Activity],
+                    autoLoadModels: true,
+                    synchronize: true,
+                }),
             }),
         ],
     })
